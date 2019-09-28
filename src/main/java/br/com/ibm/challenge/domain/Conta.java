@@ -1,5 +1,6 @@
 package br.com.ibm.challenge.domain;
 
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,15 +14,17 @@ public class Conta{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "cli_id")
 	private Long id;
 
-	@Column(name = "cli_conta", nullable = false)
+	@Column(name="conta_cliente")
 	private String contaCliente;
-
-	@Column(name = "cli_saldo")
+	
+	@Column(name="saldo")
 	private Double saldo;
 
+	public Conta() {
+	}
+	
 	public Long getId() {
 		return id;
 	}
@@ -46,5 +49,4 @@ public class Conta{
 		this.saldo = saldo;
 	}
 	
-
 }

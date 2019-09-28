@@ -1,4 +1,4 @@
-package br.com.ibm.enumerator;
+package br.com.ibm.challenge.enumerator;
 
 public enum TransacaoEnum {
 	 SAQUE,

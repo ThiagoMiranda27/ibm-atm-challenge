@@ -15,7 +15,7 @@ public class ContaService {
 	@Autowired
 	private ContaRepository contaRepository;
 	
-	public List<Conta> getAllContas() {
+	public List<Conta> getTodasContas() {
 		List<Conta> contas =  new ArrayList<>();
 		contas = contaRepository.findAll();
 		return contas;
@@ -32,7 +32,7 @@ public class ContaService {
 	public Conta salvaTransacao(Conta conta) {
 		return contaRepository.save(conta);
 	}
-	
+		
 	public static Double valorDoSaque(Double saldoAtual, Double valorSaque) {
 		return (saldoAtual - valorSaque);
 	}
