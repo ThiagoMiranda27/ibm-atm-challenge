@@ -23,7 +23,8 @@ public class TransacaoController {
 	@Transactional
 	public ResponseEntity<?> depositar(@RequestBody String jsonStr) throws Exception{
 			JSONObject jObject = new JSONObject(jsonStr);
-			transacaoService.depositar(jObject.getString("contaDoDeposito"), jObject.getDouble("valorDeposito"));
+			transacaoService.depositar(jObject.getString("contaDoDeposito")
+					, jObject.getDouble("valorDeposito"), jObject.getString("tipoDeposito"));
 			return ResponseEntity.ok().build();
 	}
 	
@@ -31,7 +32,7 @@ public class TransacaoController {
 	@Transactional
 	public ResponseEntity<?> sacar(@RequestBody String jsonStr) throws Exception{
 			JSONObject jObject = new JSONObject(jsonStr);
-			transacaoService.depositar(jObject.getString("contaCliente"), jObject.getDouble("valorSaque"));
+			transacaoService.sacar(jObject.getString("contaCliente"), jObject.getDouble("valorSaque"));
 			return ResponseEntity.ok().build();
 	}
 	

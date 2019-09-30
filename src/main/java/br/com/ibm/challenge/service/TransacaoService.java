@@ -21,18 +21,25 @@ public class TransacaoService {
 	@Autowired
 	private ContaService contaService;
 
-	public boolean depositar(String contaDoDeposito, Double valorDeposito) throws Exception {
+	public boolean depositar(String contaDoDeposito, Double valorDeposito, String tipoDeposito) throws Exception {
 		Optional<Conta> conta = contaService.getContaByContaCliente(contaDoDeposito);
 
 		if (conta.isPresent()) {
 
 			Conta contaDoCliente1 = conta.get();
 			Double saldoAtual = contaDoCliente1.getSaldo();
-
-			contaDoCliente1.setSaldo((saldoAtual + valorDeposito));
-			contaDoCliente1 = contaService.salvaTransacao(contaDoCliente1);
-
-			if (this.gerarTransacao(contaDoCliente1, null, TransacaoEnum.DEPOSITO, valorDeposito).getId() != null) {
+			
+			if(tipoDeposito.toLowerCase().equals("dinheiro")) {
+				contaDoCliente1.setSaldo((saldoAtual + valorDeposito));
+				contaDoCliente1 = contaService.salvaTransacao(contaDoCliente1);
+			}else if(tipoDeposito.toLowerCase().equals("cheque")){
+				contaDoCliente1.setSaldo((saldoAtual + valorDeposito));
+				contaDoCliente1 = contaService.salvaTransacao(contaDoCliente1);
+			}else {
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tipo de deposito incorreto!");
+			}
+			
+			if (this.gerarTransacao(contaDoCliente1, null, TransacaoEnum.DEPOSITO, valorDeposito, tipoDeposito.toLowerCase()).getId() != null) {
 				return true;
 			} else
 
@@ -61,24 +68,25 @@ public class TransacaoService {
 			contaDoCliente = contaService.salvaTransacao(contaDoCliente);
 
 			if (contaDoCliente.getSaldo().equals(valorDepooisDoSaque)) {
-				if (this.gerarTransacao(contaDoCliente, null, TransacaoEnum.SAQUE, valorSaque).getId() != null) {
+				if (this.gerarTransacao(contaDoCliente, null, TransacaoEnum.SAQUE, valorSaque, null).getId() != null) {
 					return true;
 				}
 			}
 			return false;
 		} else {
-			
+
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Conta informada não existe");
 		}
 	}
 
 	public Transacao gerarTransacao(Conta contaDoCliente1, Conta contaDoCliente2, TransacaoEnum transacaoEnum,
-			Double valorTransacao) {
+			Double valorTransacao, String tipoDeposito) {
 		Transacao transacao = new Transacao();
 		transacao.setTipoTransacao(transacaoEnum);
 		transacao.setValorTransacao(valorTransacao);
 		transacao.setContaDoCliente1(contaDoCliente1);
 		transacao.setContaDoCliente2(contaDoCliente2);
+		transacao.setTipoDeposito(tipoDeposito);
 
 		return transacaoRepository.save(transacao);
 	}
