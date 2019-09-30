@@ -1,32 +1,38 @@
 package br.com.ibm.challenge.controller;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
-import br.com.ibm.challenge.enumerator.TipoDepositoEnum;
 import br.com.ibm.challenge.service.TransacaoService;
 
 @RestController
-@RequestMapping("/atm")
+@RequestMapping("/transacao")
 public class TransacaoController {
 	
 	@Autowired
 	TransacaoService transacaoService;
 	
-	@PutMapping("/depositar")
-	public ResponseEntity<?> depositar(@RequestParam String contaDoDeposito,
-								@RequestParam Double valorDeposito, @RequestParam TipoDepositoEnum tipoDeposito) throws Exception{
-		try {
-			transacaoService.depositar(contaDoDeposito, valorDeposito, tipoDeposito);
+	@PutMapping("/depositar") 
+	@Transactional
+	public ResponseEntity<?> depositar(@RequestBody String jsonStr) throws Exception{
+			JSONObject jObject = new JSONObject(jsonStr);
+			transacaoService.depositar(jObject.getString("contaDoDeposito"), jObject.getDouble("valorDeposito"));
 			return ResponseEntity.ok().build();
-		} catch (ResponseStatusException ex) {
-			throw ex;
-		}
+	}
+	
+	@PutMapping("/sacar") 
+	@Transactional
+	public ResponseEntity<?> sacar(@RequestBody String jsonStr) throws Exception{
+			JSONObject jObject = new JSONObject(jsonStr);
+			transacaoService.depositar(jObject.getString("contaCliente"), jObject.getDouble("valorSaque"));
+			return ResponseEntity.ok().build();
 	}
 	
 }

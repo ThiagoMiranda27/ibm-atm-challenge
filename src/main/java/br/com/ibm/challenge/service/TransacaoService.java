@@ -9,66 +9,78 @@ import org.springframework.web.server.ResponseStatusException;
 
 import br.com.ibm.challenge.domain.Conta;
 import br.com.ibm.challenge.domain.Transacao;
-import br.com.ibm.challenge.enumerator.TipoDepositoEnum;
 import br.com.ibm.challenge.enumerator.TransacaoEnum;
 import br.com.ibm.challenge.repository.TransacaoRepository;
-
 
 @Service
 public class TransacaoService {
 
 	@Autowired
 	private TransacaoRepository transacaoRepository;
-	
+
 	@Autowired
 	private ContaService contaService;
-	
-	 
-	public boolean depositar(String contaDoDeposito, Double valorDeposito, TipoDepositoEnum tipoDeposito) throws Exception{
+
+	public boolean depositar(String contaDoDeposito, Double valorDeposito) throws Exception {
 		Optional<Conta> conta = contaService.getContaByContaCliente(contaDoDeposito);
 
-		if(conta.isPresent()){
+		if (conta.isPresent()) {
+
 			Conta contaDoCliente1 = conta.get();
 			Double saldoAtual = contaDoCliente1.getSaldo();
 
-			if(tipoDeposito == TipoDepositoEnum.DINHEIRO) {
-				contaDoCliente1.setSaldo((saldoAtual + valorDeposito));
-				contaDoCliente1 = contaService.salvaTransacao(contaDoCliente1);
-				
-			} else if(tipoDeposito == TipoDepositoEnum.CHEQUE) {
-				contaDoCliente1.setSaldo((saldoAtual + valorDeposito));
-				contaDoCliente1 = contaService.salvaTransacao(contaDoCliente1);
-			} else {
-				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "tipo de deposito não existe");
-			}
-			
-			if (this.gerarTransacao(contaDoCliente1, null, TransacaoEnum.DEPOSITO, TipoDepositoEnum.DINHEIRO
-					, valorDeposito).getId() != null) {
-				return true;
-			} else if (this.gerarTransacao(contaDoCliente1, null, TransacaoEnum.DEPOSITO, TipoDepositoEnum.CHEQUE
-					, valorDeposito).getId() != null) {
+			contaDoCliente1.setSaldo((saldoAtual + valorDeposito));
+			contaDoCliente1 = contaService.salvaTransacao(contaDoCliente1);
+
+			if (this.gerarTransacao(contaDoCliente1, null, TransacaoEnum.DEPOSITO, valorDeposito).getId() != null) {
 				return true;
 			} else
-				
-			return false;
-			
+
+				return false;
+
 		} else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Conta não existe");
 		}
 	}
 
+	public boolean sacar(String contaCliente, Double valorSaque) throws Exception {
+		Optional<Conta> conta = contaService.getContaByContaCliente(contaCliente);
 
-	public Transacao gerarTransacao(Conta contaDoCliente1, Conta contaDoCliente2, TransacaoEnum transacaoEnum, TipoDepositoEnum tipoDeposito, Double valorTransacao){
+		if (conta.isPresent()) {
+			Conta contaDoCliente = conta.get();
+			Double saldoAtual = contaDoCliente.getSaldo();
+
+			Double valorDepooisDoSaque = contaService.valorDoSaque(saldoAtual, valorSaque);
+
+			if (valorDepooisDoSaque > 0) {
+				contaDoCliente.setSaldo(valorDepooisDoSaque);
+			} else {
+				throw new ResponseStatusException(HttpStatus.ACCEPTED, "Saldo insuficiente para realizar a operação");
+			}
+
+			contaDoCliente = contaService.salvaTransacao(contaDoCliente);
+
+			if (contaDoCliente.getSaldo().equals(valorDepooisDoSaque)) {
+				if (this.gerarTransacao(contaDoCliente, null, TransacaoEnum.SAQUE, valorSaque).getId() != null) {
+					return true;
+				}
+			}
+			return false;
+		} else {
+			
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Conta informada não existe");
+		}
+	}
+
+	public Transacao gerarTransacao(Conta contaDoCliente1, Conta contaDoCliente2, TransacaoEnum transacaoEnum,
+			Double valorTransacao) {
 		Transacao transacao = new Transacao();
 		transacao.setTipoTransacao(transacaoEnum);
-		transacao.setTipoDeposito(tipoDeposito);
 		transacao.setValorTransacao(valorTransacao);
 		transacao.setContaDoCliente1(contaDoCliente1);
 		transacao.setContaDoCliente2(contaDoCliente2);
-		
 
 		return transacaoRepository.save(transacao);
 	}
-	
-	
+
 }

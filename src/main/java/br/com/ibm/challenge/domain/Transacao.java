@@ -7,7 +7,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
-import br.com.ibm.challenge.enumerator.TipoDepositoEnum;
 import br.com.ibm.challenge.enumerator.TransacaoEnum;
 
 @Entity
@@ -25,10 +24,9 @@ public class Transacao {
 	@JoinColumn(name = "id")
 	private Conta contaDoCliente2;
 	
+	private String tipoDeposito;
 	
 	private TransacaoEnum tipoTransacao;
-	
-	private TipoDepositoEnum tipoDeposito;
 	
 	private double valorTransacao;
 		
@@ -49,14 +47,6 @@ public class Transacao {
 
 	public void setTipoTransacao(TransacaoEnum tipoTransacao) {
 		this.tipoTransacao = tipoTransacao;
-	}
-
-	public TipoDepositoEnum getTipoDeposito() {
-		return tipoDeposito;
-	}
-
-	public void setTipoDeposito(TipoDepositoEnum tipoDeposito) {
-		this.tipoDeposito = tipoDeposito;
 	}
 
 	public Conta getContaDoCliente1() {
@@ -81,6 +71,14 @@ public class Transacao {
 
 	public void setValorTransacao(double valorTransacao) {
 		this.valorTransacao = valorTransacao;
+	}
+
+	public String getTipoDeposito() {
+		return tipoDeposito;
+	}
+
+	public void setTipoDeposito(String tipoDeposito) {
+		this.tipoDeposito = tipoDeposito;
 	}
 			
 }

@@ -1,1 +1,10 @@
+br\com\ibm\challenge\controller\ContaController.class
+br\com\ibm\challenge\repository\TransacaoRepository.class
+br\com\ibm\challenge\enumerator\TransacaoEnum.class
+br\com\ibm\challenge\service\ContaService.class
+br\com\ibm\challenge\domain\Transacao.class
+br\com\ibm\challenge\domain\Conta.class
+br\com\ibm\challenge\controller\TransacaoController.class
 br\com\ibm\challenge\Application.class
+br\com\ibm\challenge\service\TransacaoService.class
+br\com\ibm\challenge\repository\ContaRepository.class
