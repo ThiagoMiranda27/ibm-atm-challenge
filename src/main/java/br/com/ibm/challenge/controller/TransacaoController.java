@@ -1,5 +1,7 @@
 package br.com.ibm.challenge.controller;
 
+import java.util.ArrayList;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +34,25 @@ public class TransacaoController {
 	@Transactional
 	public ResponseEntity<?> sacar(@RequestBody String jsonStr) throws Exception{
 			JSONObject jObject = new JSONObject(jsonStr);
-			transacaoService.sacar(jObject.getString("contaCliente"), jObject.getDouble("valorSaque"));
+			
+			ArrayList<String> saque = new ArrayList<String>();
+			
+			int i = 0;
+			for (i = 0; i < jObject.getJSONArray("NotaSaque").length(); i++) {
+				saque.add(jObject.getJSONArray("NotaSaque").get(i).toString());
+				System.out.println(saque);
+			}
+			
+			transacaoService.sacar(jObject.getString("contaCliente"), jObject.getDouble("valorSaque"), saque);
+			return ResponseEntity.ok().build();
+	}
+	
+	@PutMapping("/transferir") 
+	@Transactional
+	public ResponseEntity<?> transferir(@RequestBody String jsonStr) throws Exception{
+			JSONObject jObject = new JSONObject(jsonStr);
+			transacaoService.transferir(jObject.getString("contaDoCliente1"), jObject.getString("contaDoCliente2"),
+					jObject.getDouble("valorTransferencia"));
 			return ResponseEntity.ok().build();
 	}
 	

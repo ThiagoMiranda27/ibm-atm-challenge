@@ -33,7 +33,7 @@ public class ContaService {
 		return contaRepository.save(conta);
 	}
 		
-	public static Double valorDoSaque(Double saldoAtual, Double valorSaque) {
+	public Double valorDoSaque(Double saldoAtual, Double valorSaque) {
 		return (saldoAtual - valorSaque);
 	}
 

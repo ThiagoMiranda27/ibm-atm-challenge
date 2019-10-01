@@ -19,17 +19,19 @@ public class Transacao {
 	@OneToOne
 	@JoinColumn(name = "id")
 	private Conta contaDoCliente1;
-	
+
 	@OneToOne
 	@JoinColumn(name = "id")
 	private Conta contaDoCliente2;
-	
+
 	private String tipoDeposito;
-	
+
+	private String notasSaque = "";
+
 	private TransacaoEnum tipoTransacao;
-	
+
 	private double valorTransacao;
-		
+
 	public Transacao() {
 	}
 
@@ -80,5 +82,13 @@ public class Transacao {
 	public void setTipoDeposito(String tipoDeposito) {
 		this.tipoDeposito = tipoDeposito;
 	}
-			
+
+	public String getNotasSaque() {
+		return notasSaque;
+	}
+
+	public void setNotasSaque(String notasSaque) {
+		this.notasSaque = notasSaque;
+	}
+
 }
