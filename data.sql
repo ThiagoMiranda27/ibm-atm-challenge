@@ -1,3 +1,5 @@
+-- Banco Postgree: criar o banco ATM e criar a tabela conta dando os INSERTS a baixo como exemplo
+
 CREATE DATABASE ATM
 
 CREATE TABLE conta (

@@ -22,6 +22,9 @@ public class TransacaoService {
 
 	@Autowired
 	private ContaService contaService;
+	
+	@Autowired
+	private CaixaStatusService caixaStatusService;
 
 	CaixaStatus caixa = CaixaStatus.getInstance();
 
@@ -45,6 +48,9 @@ public class TransacaoService {
 					throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tipo de deposito incorreto!");
 				}
 
+				contaDoCliente1 = contaService.salvaTransacao(contaDoCliente1);
+				caixaStatusService.salvaStatus(caixa);
+				
 				if (this.gerarTransacao(contaDoCliente1, null, TransacaoEnum.DEPOSITO.getDescricao(), valorDeposito,
 						tipoDeposito.toLowerCase(), null).getId() != null) {
 					return true;
@@ -79,7 +85,8 @@ public class TransacaoService {
 				}
 
 				contaDoCliente = contaService.salvaTransacao(contaDoCliente);
-
+				caixaStatusService.salvaStatus(caixa);
+				
 				if (contaDoCliente.getSaldo().equals(valorDepoisDoSaque)) {
 					if (this.gerarTransacao(contaDoCliente, null, TransacaoEnum.SAQUE.getDescricao(), valorSaque, null,
 							NotaSaque).getId() != null) {
@@ -121,6 +128,7 @@ public class TransacaoService {
 
 				contaTranferenciaCliente1 = contaService.salvaTransacao(contaTranferenciaCliente1);
 				contaTranferenciaCliente2 = contaService.salvaTransacao(contaTranferenciaCliente2);
+				caixaStatusService.salvaStatus(caixa);
 
 				if (contaTranferenciaCliente1.getSaldo().equals(valorDepoisDoSaque)) {
 					if (this.gerarTransacao(contaTranferenciaCliente1, null, TransacaoEnum.TRANSFERENCIA.getDescricao(),
