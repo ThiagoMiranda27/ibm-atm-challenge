@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import br.com.ibm.challenge.domain.CaixaStatus;
 import br.com.ibm.challenge.domain.Conta;
 import br.com.ibm.challenge.domain.Transacao;
 import br.com.ibm.challenge.enumerator.TransacaoEnum;
@@ -22,63 +23,77 @@ public class TransacaoService {
 	@Autowired
 	private ContaService contaService;
 
+	CaixaStatus caixa = CaixaStatus.getInstance();
+
 	public boolean depositar(String contaDoDeposito, Double valorDeposito, String tipoDeposito) throws Exception {
 		Optional<Conta> conta = contaService.getContaByContaCliente(contaDoDeposito);
 
-		if (conta.isPresent()) {
+		if (caixa.isStatusCaixa()) {
 
-			Conta contaDoCliente1 = conta.get();
-			Double saldoAtual = contaDoCliente1.getSaldo();
+			if (conta.isPresent()) {
 
-			if (tipoDeposito.toLowerCase().equals("dinheiro")) {
-				contaDoCliente1.setSaldo((saldoAtual + valorDeposito));
-				contaDoCliente1 = contaService.salvaTransacao(contaDoCliente1);
-			} else if (tipoDeposito.toLowerCase().equals("cheque")) {
-				contaDoCliente1.setSaldo((saldoAtual + valorDeposito));
-				contaDoCliente1 = contaService.salvaTransacao(contaDoCliente1);
+				Conta contaDoCliente1 = conta.get();
+				Double saldoAtual = contaDoCliente1.getSaldo();
+
+				if (tipoDeposito.toLowerCase().equals("dinheiro")) {
+					contaDoCliente1.setSaldo((saldoAtual + valorDeposito));
+					contaDoCliente1 = contaService.salvaTransacao(contaDoCliente1);
+				} else if (tipoDeposito.toLowerCase().equals("cheque")) {
+					contaDoCliente1.setSaldo((saldoAtual + valorDeposito));
+					contaDoCliente1 = contaService.salvaTransacao(contaDoCliente1);
+				} else {
+					throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tipo de deposito incorreto!");
+				}
+
+				if (this.gerarTransacao(contaDoCliente1, null, TransacaoEnum.DEPOSITO.getDescricao(), valorDeposito,
+						tipoDeposito.toLowerCase(), null).getId() != null) {
+					return true;
+				} else
+
+					return false;
+
 			} else {
-				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tipo de deposito incorreto!");
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Conta não existe");
 			}
-
-			if (this.gerarTransacao(contaDoCliente1, null, TransacaoEnum.DEPOSITO, valorDeposito,
-					tipoDeposito.toLowerCase(), null).getId() != null) {
-				return true;
-			} else
-
-				return false;
-
 		} else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Conta não existe");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Status do caixa está fechado");
 		}
 	}
 
 	public boolean sacar(String contaCliente, Double valorSaque, ArrayList<String> NotaSaque) throws Exception {
 		Optional<Conta> conta = contaService.getContaByContaCliente(contaCliente);
 
-		if (conta.isPresent()) {
-			Conta contaDoCliente = conta.get();
-			Double saldoAtual = contaDoCliente.getSaldo();
+		if (caixa.isStatusCaixa()) {
 
-			Double valorDepoisDoSaque = contaService.valorDoSaque(saldoAtual, valorSaque);
+			if (conta.isPresent()) {
+				Conta contaDoCliente = conta.get();
+				Double saldoAtual = contaDoCliente.getSaldo();
 
-			if (valorDepoisDoSaque > 0) {
-				contaDoCliente.setSaldo(valorDepoisDoSaque);
-				
-			} else {
-				throw new ResponseStatusException(HttpStatus.ACCEPTED, "Saldo insuficiente para realizar o saque");
-			}
+				Double valorDepoisDoSaque = contaService.valorDoSaque(saldoAtual, valorSaque);
 
-			contaDoCliente = contaService.salvaTransacao(contaDoCliente);
+				if (valorDepoisDoSaque > 0) {
+					contaDoCliente.setSaldo(valorDepoisDoSaque);
 
-			if (contaDoCliente.getSaldo().equals(valorDepoisDoSaque)) {
-				if (this.gerarTransacao(contaDoCliente, null, TransacaoEnum.SAQUE, valorSaque, null, NotaSaque).getId() != null) {
-					return true;
+				} else {
+					throw new ResponseStatusException(HttpStatus.ACCEPTED, "Saldo insuficiente para realizar o saque");
 				}
-			}
-			return false;
-		} else {
 
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Conta informada não existe");
+				contaDoCliente = contaService.salvaTransacao(contaDoCliente);
+
+				if (contaDoCliente.getSaldo().equals(valorDepoisDoSaque)) {
+					if (this.gerarTransacao(contaDoCliente, null, TransacaoEnum.SAQUE.getDescricao(), valorSaque, null,
+							NotaSaque).getId() != null) {
+						return true;
+					}
+				}
+				return false;
+			} else {
+
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Conta informada não existe");
+			}
+
+		} else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Status do caixa está fechado");
 		}
 	}
 
@@ -86,52 +101,57 @@ public class TransacaoService {
 		Optional<Conta> contaCliente1 = contaService.getContaByContaCliente(contaDoCliente1);
 		Optional<Conta> contaCliente2 = contaService.getContaByContaCliente(contaDoCliente2);
 
-		if (contaCliente1.isPresent() && contaCliente2.isPresent()) {
-			Conta contaTranferenciaCliente1 = contaCliente1.get();
-			Conta contaTranferenciaCliente2 = contaCliente2.get();
-			Double saldoCliente1 = contaTranferenciaCliente1.getSaldo();
-			Double saldoCliente2 = contaTranferenciaCliente2.getSaldo();
+		if (caixa.isStatusCaixa()) {
 
-			Double valorDepoisDoSaque = contaService.valorDoSaque(saldoCliente1, valorTransferencia);
+			if (contaCliente1.isPresent() && contaCliente2.isPresent()) {
+				Conta contaTranferenciaCliente1 = contaCliente1.get();
+				Conta contaTranferenciaCliente2 = contaCliente2.get();
+				Double saldoCliente1 = contaTranferenciaCliente1.getSaldo();
+				Double saldoCliente2 = contaTranferenciaCliente2.getSaldo();
 
-			if (valorDepoisDoSaque > 0) {
-				contaTranferenciaCliente1.setSaldo(valorDepoisDoSaque);
-				contaTranferenciaCliente2.setSaldo(saldoCliente2 + valorTransferencia);
-			} else {
-				throw new ResponseStatusException(HttpStatus.ACCEPTED,
-						"Saldo insuficiente para realizar a transferencia");
-			}
+				Double valorDepoisDoSaque = contaService.valorDoSaque(saldoCliente1, valorTransferencia);
 
-			contaTranferenciaCliente1 = contaService.salvaTransacao(contaTranferenciaCliente1);
-			contaTranferenciaCliente2 = contaService.salvaTransacao(contaTranferenciaCliente2);
-
-			if (contaTranferenciaCliente1.getSaldo().equals(valorDepoisDoSaque)) {
-				if (this.gerarTransacao(contaTranferenciaCliente1, null, TransacaoEnum.TRANSFERENCIA,
-						valorTransferencia, null , null).getId() != null) {
-					return true;
+				if (valorDepoisDoSaque > 0) {
+					contaTranferenciaCliente1.setSaldo(valorDepoisDoSaque);
+					contaTranferenciaCliente2.setSaldo(saldoCliente2 + valorTransferencia);
+				} else {
+					throw new ResponseStatusException(HttpStatus.ACCEPTED,
+							"Saldo insuficiente para realizar a transferencia");
 				}
+
+				contaTranferenciaCliente1 = contaService.salvaTransacao(contaTranferenciaCliente1);
+				contaTranferenciaCliente2 = contaService.salvaTransacao(contaTranferenciaCliente2);
+
+				if (contaTranferenciaCliente1.getSaldo().equals(valorDepoisDoSaque)) {
+					if (this.gerarTransacao(contaTranferenciaCliente1, null, TransacaoEnum.TRANSFERENCIA.getDescricao(),
+							valorTransferencia, null, null).getId() != null) {
+						return true;
+					}
+				}
+				return false;
+			} else {
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Conta informada não existe");
 			}
-			return false;
+
 		} else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Conta informada não existe");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Status do caixa está fechado");
 		}
 
 	}
 
-	public Transacao gerarTransacao(Conta contaDoCliente1, Conta contaDoCliente2, TransacaoEnum transacaoEnum,
-			Double valorTransacao, String tipoDeposito, ArrayList<String> NotaDoSaque) {
-		
+	public Transacao gerarTransacao(Conta contaDoCliente1, Conta contaDoCliente2, String transacaoEnum,
+			Double valorTransacao, String tipoDeposito, ArrayList<String> notaDoSaque) {
+
 		Transacao transacao = new Transacao();
 		transacao.setTipoTransacao(transacaoEnum);
 		transacao.setValorTransacao(valorTransacao);
 		transacao.setContaDoCliente1(contaDoCliente1);
 		transacao.setContaDoCliente2(contaDoCliente2);
 		transacao.setTipoDeposito(tipoDeposito);
-		
-		transacao.setNotasSaque(NotaDoSaque.toString());
-		
-		
-		
+		if (notaDoSaque != null) {
+			transacao.setNotasSaque(notaDoSaque.toString());
+		}
+
 		return transacaoRepository.save(transacao);
 	}
 

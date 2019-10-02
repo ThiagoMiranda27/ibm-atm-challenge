@@ -1,12 +1,15 @@
-C:\Users\ThiagodaCruzMiranda\GitHub\ibm-atm-challenge\src\main\java\br\com\ibm\challenge\config\AberturaCaixa.java
 C:\Users\ThiagodaCruzMiranda\GitHub\ibm-atm-challenge\src\main\java\br\com\ibm\challenge\Application.java
 C:\Users\ThiagodaCruzMiranda\GitHub\ibm-atm-challenge\src\main\java\br\com\ibm\challenge\controller\ContaController.java
+C:\Users\ThiagodaCruzMiranda\GitHub\ibm-atm-challenge\src\main\java\br\com\ibm\challenge\controller\CaixaStatusController.java
 C:\Users\ThiagodaCruzMiranda\GitHub\ibm-atm-challenge\src\main\java\br\com\ibm\challenge\controller\TransacaoController.java
 C:\Users\ThiagodaCruzMiranda\GitHub\ibm-atm-challenge\src\main\java\br\com\ibm\challenge\service\ContaService.java
 C:\Users\ThiagodaCruzMiranda\GitHub\ibm-atm-challenge\src\main\java\br\com\ibm\challenge\bean\package-info.java
+C:\Users\ThiagodaCruzMiranda\GitHub\ibm-atm-challenge\src\main\java\br\com\ibm\challenge\domain\CaixaStatus.java
+C:\Users\ThiagodaCruzMiranda\GitHub\ibm-atm-challenge\src\main\java\br\com\ibm\challenge\service\CaixaStatusService.java
 C:\Users\ThiagodaCruzMiranda\GitHub\ibm-atm-challenge\src\main\java\br\com\ibm\challenge\repository\TransacaoRepository.java
 C:\Users\ThiagodaCruzMiranda\GitHub\ibm-atm-challenge\src\main\java\br\com\ibm\challenge\domain\Conta.java
 C:\Users\ThiagodaCruzMiranda\GitHub\ibm-atm-challenge\src\main\java\br\com\ibm\challenge\service\TransacaoService.java
+C:\Users\ThiagodaCruzMiranda\GitHub\ibm-atm-challenge\src\main\java\br\com\ibm\challenge\repository\CaixaStatusRepository.java
 C:\Users\ThiagodaCruzMiranda\GitHub\ibm-atm-challenge\src\main\java\br\com\ibm\challenge\enumerator\TransacaoEnum.java
 C:\Users\ThiagodaCruzMiranda\GitHub\ibm-atm-challenge\src\main\java\br\com\ibm\challenge\repository\ContaRepository.java
 C:\Users\ThiagodaCruzMiranda\GitHub\ibm-atm-challenge\src\main\java\br\com\ibm\challenge\domain\Transacao.java

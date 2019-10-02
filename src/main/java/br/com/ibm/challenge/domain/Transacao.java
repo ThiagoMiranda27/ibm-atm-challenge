@@ -7,7 +7,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
-import br.com.ibm.challenge.enumerator.TransacaoEnum;
 
 @Entity
 public class Transacao {
@@ -28,10 +27,10 @@ public class Transacao {
 
 	private String notasSaque = "";
 
-	private TransacaoEnum tipoTransacao;
+	private String tipoTransacao;
 
 	private double valorTransacao;
-
+	
 	public Transacao() {
 	}
 
@@ -43,11 +42,11 @@ public class Transacao {
 		this.id = id;
 	}
 
-	public TransacaoEnum getTipoTransacao() {
+	public String getTipoTransacao() {
 		return tipoTransacao;
 	}
 
-	public void setTipoTransacao(TransacaoEnum tipoTransacao) {
+	public void setTipoTransacao(String tipoTransacao) {
 		this.tipoTransacao = tipoTransacao;
 	}
 
@@ -90,5 +89,6 @@ public class Transacao {
 	public void setNotasSaque(String notasSaque) {
 		this.notasSaque = notasSaque;
 	}
+
 
 }

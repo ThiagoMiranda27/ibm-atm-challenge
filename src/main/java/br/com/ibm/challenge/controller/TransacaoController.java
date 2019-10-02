@@ -40,7 +40,6 @@ public class TransacaoController {
 			int i = 0;
 			for (i = 0; i < jObject.getJSONArray("NotaSaque").length(); i++) {
 				saque.add(jObject.getJSONArray("NotaSaque").get(i).toString());
-				System.out.println(saque);
 			}
 			
 			transacaoService.sacar(jObject.getString("contaCliente"), jObject.getDouble("valorSaque"), saque);
