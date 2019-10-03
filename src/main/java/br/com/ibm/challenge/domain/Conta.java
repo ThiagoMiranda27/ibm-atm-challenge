@@ -21,7 +21,7 @@ public class Conta{
 	
 	@Column(name="saldo")
 	private Double saldo;
-
+	
 	public Conta() {
 	}
 	
@@ -48,5 +48,5 @@ public class Conta{
 	public void setSaldo(Double saldo) {
 		this.saldo = saldo;
 	}
-	
+
 }

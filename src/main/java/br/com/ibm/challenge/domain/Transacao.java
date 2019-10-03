@@ -22,6 +22,8 @@ public class Transacao {
 	@OneToOne
 	@JoinColumn(name = "id")
 	private Conta contaDoCliente2;
+	
+	private String numeroConta;
 
 	private String tipoDeposito;
 
@@ -90,5 +92,12 @@ public class Transacao {
 		this.notasSaque = notasSaque;
 	}
 
+	public String getNumeroConta() {
+		return numeroConta;
+	}
 
+	public void setNumeroConta(String numeroConta) {
+		this.numeroConta = numeroConta;
+	}
+	
 }

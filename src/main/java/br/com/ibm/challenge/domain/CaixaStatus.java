@@ -16,7 +16,7 @@ public final class CaixaStatus {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	private boolean statusCaixa;
+	private boolean statusCaixa = true;
 	
 	private Date dataStatus;
 	

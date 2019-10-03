@@ -27,6 +27,7 @@ public class TransacaoService {
 	private CaixaStatusService caixaStatusService;
 
 	CaixaStatus caixa = CaixaStatus.getInstance();
+	 
 
 	public boolean depositar(String contaDoDeposito, Double valorDeposito, String tipoDeposito) throws Exception {
 		Optional<Conta> conta = contaService.getContaByContaCliente(contaDoDeposito);
@@ -37,10 +38,12 @@ public class TransacaoService {
 
 				Conta contaDoCliente1 = conta.get();
 				Double saldoAtual = contaDoCliente1.getSaldo();
+				String numeroConta = contaDoCliente1.getContaCliente();
 
 				if (tipoDeposito.toLowerCase().equals("dinheiro")) {
 					contaDoCliente1.setSaldo((saldoAtual + valorDeposito));
 					contaDoCliente1 = contaService.salvaTransacao(contaDoCliente1);
+					
 				} else if (tipoDeposito.toLowerCase().equals("cheque")) {
 					contaDoCliente1.setSaldo((saldoAtual + valorDeposito));
 					contaDoCliente1 = contaService.salvaTransacao(contaDoCliente1);
@@ -51,7 +54,7 @@ public class TransacaoService {
 				contaDoCliente1 = contaService.salvaTransacao(contaDoCliente1);
 				caixaStatusService.salvaStatus(caixa);
 				
-				if (this.gerarTransacao(contaDoCliente1, null, TransacaoEnum.DEPOSITO.getDescricao(), valorDeposito,
+				if (this.gerarTransacao(numeroConta, contaDoCliente1, null, TransacaoEnum.DEPOSITO.getDescricao(), valorDeposito,
 						tipoDeposito.toLowerCase(), null).getId() != null) {
 					return true;
 				} else
@@ -74,7 +77,8 @@ public class TransacaoService {
 			if (conta.isPresent()) {
 				Conta contaDoCliente = conta.get();
 				Double saldoAtual = contaDoCliente.getSaldo();
-
+				String numeroConta = contaDoCliente.getContaCliente();
+				
 				Double valorDepoisDoSaque = contaService.valorDoSaque(saldoAtual, valorSaque);
 
 				if (valorDepoisDoSaque > 0) {
@@ -88,7 +92,7 @@ public class TransacaoService {
 				caixaStatusService.salvaStatus(caixa);
 				
 				if (contaDoCliente.getSaldo().equals(valorDepoisDoSaque)) {
-					if (this.gerarTransacao(contaDoCliente, null, TransacaoEnum.SAQUE.getDescricao(), valorSaque, null,
+					if (this.gerarTransacao(numeroConta, contaDoCliente, null, TransacaoEnum.SAQUE.getDescricao(), valorSaque, null,
 							NotaSaque).getId() != null) {
 						return true;
 					}
@@ -115,7 +119,8 @@ public class TransacaoService {
 				Conta contaTranferenciaCliente2 = contaCliente2.get();
 				Double saldoCliente1 = contaTranferenciaCliente1.getSaldo();
 				Double saldoCliente2 = contaTranferenciaCliente2.getSaldo();
-
+				String numeroConta = contaTranferenciaCliente1.getContaCliente();
+				
 				Double valorDepoisDoSaque = contaService.valorDoSaque(saldoCliente1, valorTransferencia);
 
 				if (valorDepoisDoSaque > 0) {
@@ -131,7 +136,7 @@ public class TransacaoService {
 				caixaStatusService.salvaStatus(caixa);
 
 				if (contaTranferenciaCliente1.getSaldo().equals(valorDepoisDoSaque)) {
-					if (this.gerarTransacao(contaTranferenciaCliente1, null, TransacaoEnum.TRANSFERENCIA.getDescricao(),
+					if (this.gerarTransacao(numeroConta, contaTranferenciaCliente1, null, TransacaoEnum.TRANSFERENCIA.getDescricao(),
 							valorTransferencia, null, null).getId() != null) {
 						return true;
 					}
@@ -147,10 +152,12 @@ public class TransacaoService {
 
 	}
 
-	public Transacao gerarTransacao(Conta contaDoCliente1, Conta contaDoCliente2, String transacaoEnum,
+	public Transacao gerarTransacao(String numeroConta, Conta contaDoCliente1, Conta contaDoCliente2, String transacaoEnum,
 			Double valorTransacao, String tipoDeposito, ArrayList<String> notaDoSaque) {
 
 		Transacao transacao = new Transacao();
+		
+		transacao.setNumeroConta(numeroConta);
 		transacao.setTipoTransacao(transacaoEnum);
 		transacao.setValorTransacao(valorTransacao);
 		transacao.setContaDoCliente1(contaDoCliente1);
@@ -159,7 +166,9 @@ public class TransacaoService {
 		if (notaDoSaque != null) {
 			transacao.setNotasSaque(notaDoSaque.toString());
 		}
-
+		else {
+			transacao.setNotasSaque(null);
+		}
 		return transacaoRepository.save(transacao);
 	}
 
