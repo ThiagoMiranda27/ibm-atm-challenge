@@ -1,3 +1,9 @@
+# Criação do Banco
+Criar o banco Pelo postgres. As querys de criação estão no arquivo data.sql
+
+# Documentação da API
+Foi implementado o swagger para facilitar na busca das chamadas.
+
 # IBM ATM Challenge
 
 Você deve criar uma API de Caixa ATM, onde deve ser possível executar operações de saque, depósito, transferência, extrato e produzir um relatório de fechamento, além de operações e controles que forem necessários.
