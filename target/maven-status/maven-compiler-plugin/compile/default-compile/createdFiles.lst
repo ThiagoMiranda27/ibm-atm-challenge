@@ -1,10 +1,15 @@
 br\com\ibm\challenge\controller\ContaController.class
 br\com\ibm\challenge\repository\TransacaoRepository.class
+br\com\ibm\challenge\service\CaixaStatusService.class
 br\com\ibm\challenge\enumerator\TransacaoEnum.class
 br\com\ibm\challenge\service\ContaService.class
 br\com\ibm\challenge\domain\Transacao.class
+br\com\ibm\challenge\domain\CaixaStatus.class
+br\com\ibm\challenge\controller\CaixaStatusController.class
+br\com\ibm\challenge\repository\CaixaStatusRepository.class
 br\com\ibm\challenge\domain\Conta.class
 br\com\ibm\challenge\controller\TransacaoController.class
 br\com\ibm\challenge\Application.class
 br\com\ibm\challenge\service\TransacaoService.class
+br\com\ibm\challenge\config\SwaggerConfig.class
 br\com\ibm\challenge\repository\ContaRepository.class
