@@ -1,8 +1,8 @@
 # Criação do Banco
-Criar o banco Pelo postgres. As querys de criação estão no arquivo data.sql
+Criar o banco Pelo postgres. As queries de criação estão no arquivo data.sql
 
 # Documentação da API
-Foi implementado o swagger para facilitar na busca das chamadas.
+Foi implementado o swagger para facilitar na busca das chamadas. Acessar por localhost:8080/swagger-ui.html
 
 # IBM ATM Challenge
 
