@@ -9,8 +9,10 @@ import javax.persistence.OneToOne;
 
 
 @Entity
-public class Transacao {
+public final class Transacao {
 
+	private static Transacao instance = null;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -32,6 +34,13 @@ public class Transacao {
 	private String tipoTransacao;
 
 	private double valorTransacao;
+	
+	public static synchronized Transacao getInstance() {
+		if (instance == null) {
+			instance = new Transacao();
+		}
+		return instance;
+	}
 	
 	public Transacao() {
 	}

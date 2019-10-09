@@ -8,12 +8,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+
 @Entity
 @Table(name = "conta")
 public class Conta{
+	
+	private static Conta instance = null;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+
 	private Long id;
 
 	@Column(name="conta_cliente")
@@ -22,9 +26,16 @@ public class Conta{
 	@Column(name="saldo")
 	private Double saldo;
 	
-	public Conta() {
+	public static synchronized Conta getInstance() {
+		if (instance == null) {
+			instance = new Conta();
+		}
+		return instance;
 	}
 	
+	public Conta() {
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -49,4 +60,9 @@ public class Conta{
 		this.saldo = saldo;
 	}
 
+	public static void setInstance(Conta instance) {
+		Conta.instance = instance;
+	}
+
+	
 }

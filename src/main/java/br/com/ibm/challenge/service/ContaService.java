@@ -14,7 +14,7 @@ public class ContaService {
 
 	@Autowired
 	private ContaRepository contaRepository;
-	
+		
 	public List<Conta> getTodasContas() {
 		List<Conta> contas =  new ArrayList<>();
 		contas = contaRepository.findAll();

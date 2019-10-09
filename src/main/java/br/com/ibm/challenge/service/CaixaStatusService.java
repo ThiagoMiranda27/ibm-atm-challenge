@@ -4,9 +4,9 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
 import br.com.ibm.challenge.domain.CaixaStatus;
 import br.com.ibm.challenge.repository.CaixaStatusRepository;
+
 
 @Service
 public class CaixaStatusService {
