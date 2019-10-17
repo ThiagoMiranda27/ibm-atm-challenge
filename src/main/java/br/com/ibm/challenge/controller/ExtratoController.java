@@ -1,9 +1,8 @@
 package br.com.ibm.challenge.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,9 +16,15 @@ public class ExtratoController {
 
 	@GetMapping("/extrato")
 	@ResponseBody
-	private ResponseEntity<?> extrato(@PathVariable String id) throws Exception {
-		extratoService.extrato();
-		return ResponseEntity.ok().build();
+	public String extrato() {
+
+		String ex = "";
+
+		ex = extratoService.extrato().toString();
+
+		System.out.println(extratoService.extrato());
+
+		return ex;
 	}
 
 }

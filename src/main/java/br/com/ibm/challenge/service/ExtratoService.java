@@ -30,17 +30,29 @@ public class ExtratoService {
 
 		if (caixa.isStatusCaixa()) {
 
-				List<Extrato> extrato = extratoRepository.extratoPorConta();
-				Hibernate.initialize(extrato);
+			List<Extrato> extrato = extratoRepository.extratoPorConta();
+			Hibernate.initialize(extrato);
 
-				caixaStatusService.salvaStatus(caixa);
+			caixaStatusService.salvaStatus(caixa);
 
-				return extrato;
+			
+			return extrato;
 
 		} else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Status do caixa está fechado");
 		}
 
+	}
+
+	public Extrato salvaExtrato(Extrato extrato) {
+		return extratoRepository.save(extrato);
+	}
+	
+	public Extrato ExtratoCliente() {
+
+		Extrato extrato = Extrato.getInstance();
+
+		return extratoRepository.save(extrato);
 	}
 
 }

@@ -8,8 +8,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
 @Entity
-public class Extrato {
+public final class Extrato {
 
+	private static Extrato instance = null;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -25,8 +27,12 @@ public class Extrato {
 	private String tipoTransacao;
 
 	private Double valorTransacao;
-
-	public Extrato() {
+	
+	public static synchronized Extrato getInstance() {
+		if (instance == null) {
+			instance = new Extrato();
+		}
+		return instance;
 	}
 
 	public Long getId() {
@@ -70,13 +76,10 @@ public class Extrato {
 		this.saldo = saldo;
 	}
 
-	public Extrato(Long id, Conta contaDoCliente, String numeroConta, Double saldo, String tipoTransacao,
-			Double valorTransacao) {
-		this.id = id;
-		this.contaDoCliente = contaDoCliente;
-		this.numeroConta = numeroConta;
-		this.saldo = saldo;
-		this.tipoTransacao = tipoTransacao;
-		this.valorTransacao = valorTransacao;
+	@Override
+	public String toString() {
+			return " Conta Cliente: " + this.numeroConta + "\n" + " Saldo: " + this.saldo + "\n" +" Tipo Transacao: " 
+					+ this.tipoTransacao + "\n" + " Valor Transasao: " + this.valorTransacao + "\n\n" ;
 	}
+	
 }
