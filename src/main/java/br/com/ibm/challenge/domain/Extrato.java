@@ -78,8 +78,8 @@ public final class Extrato {
 
 	@Override
 	public String toString() {
-			return " Conta Cliente: " + this.numeroConta + "\n" + " Saldo: " + this.saldo + "\n" +" Tipo Transacao: " 
-					+ this.tipoTransacao + "\n" + " Valor Transasao: " + this.valorTransacao + "\n\n" ;
+			return "\n Conta Cliente: " + this.numeroConta + "\n" + " Saldo: " + this.saldo + "\n" +" Tipo Transacao: " 
+					+ this.tipoTransacao + "\n" + " Valor Transasao: " + this.valorTransacao + "\n";
 	}
 	
 }
